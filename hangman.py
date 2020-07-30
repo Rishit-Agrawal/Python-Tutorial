@@ -1,34 +1,42 @@
+#HANGMAN PROJECT
+
+# Hangman-
+#You have to guess the word
+#You can guess a letter or a complete word
+#If you guess the letter correctly, the program will tell you all the locations of the letter in the word.
+#You will be given 5 attempts to guess the word
+
+import random 
+
+def getWord():
+   words = ['banana', 'computer', 'mango']
+   return random.choice(words) 
+
 
 #store the word to guess
-word = "mango"
+word = getWord()
+
+# any number of turns can be used here
+turns=5
 
 #store length of word
 lengthOfWord = len(word)
 
-#store max number of attempts allowed 
-numOfAttempts=5
-
-#store number of attempts taken so far
-attempts=0
-
-#store number of correct letters guessed so far 
-numOfLetterGuessed=0
-
-#store letters list guessed by user so far
+#store all the letters guessed by user so far
 lettersGuessed=[]
 
 #store how partial word look like from correct guessed letters so far
-partialword=["_"] * lengthOfWord
+partialCorrectWord="*"*lengthOfWord
+   
 
-#store if user has
+#tell if user has won
 win = False
 
-
-while (attempts < numOfAttempts):
+while (turns > 0):
 
    #first show user what letters he has guessed so far and how partial guessed word looks like
    print("so far you have guessed: "+str(lettersGuessed))
-   print("so far partial word guessed: " + str(partialword))
+   print("so far partial word guessed: " + partialCorrectWord)
 
    #take input from user
    guess=input("\nwhat is your guess: ")
@@ -36,11 +44,9 @@ while (attempts < numOfAttempts):
    if (guess in lettersGuessed):
        print("this letter/word is already guessed")
        continue      
-   else:
-       lettersGuessed.append(guess)
-       
-
-   attempts = attempts + 1
+   
+   lettersGuessed.append(guess)
+   turns = turns - 1
    
    #check if user has guessed the complete word in a single go
    if len(guess) > 1:
@@ -52,26 +58,28 @@ while (attempts < numOfAttempts):
             continue
             
    #check if user has guessed a correct letter
-   if (guess in word):
-       print(guess+" is correct")
-       numOfLetterGuessed = numOfLetterGuessed + word.count(guess);
-   else:
+   if (guess not in word):
        print("wrong guess")
+       continue
+   
 
-
-   #check if user has guessed all the letters
-   if(numOfLetterGuessed==lengthOfWord):
-       win = True
-       break
-        
+   print(guess+" is correct")
+   
    #partial word using correct guessed letters so far
    for n in range(0,lengthOfWord):
         if(word[n]==guess):
-            partialword[n]=guess
+            partialCorrectWord = partialCorrectWord[:n] + guess + partialCorrectWord[n+1:]
+
+
+   #check if user has guessed all the letters
+   if(partialCorrectWord==word):
+       win = True
+       break         
            
     
 if (win == False):
-    print("you are out of attempts - you lost")
+    print("you are out of attempts- sorry you loose")
+    print("the word was: "+str(word))
 else:
     print("you win")
     print("the word was: "+str(word))
